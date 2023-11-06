@@ -67,7 +67,8 @@ class Agent:
             selected_action = np.random.choice(actions)
             self.state_actions_value_2[state][action] += self.alpha * (
                 reward + self.gamma * self.state_actions_value_1[next_state][
-                    selected_action] - self.state_actions_value_2[state][action])
+                    selected_action] - self.state_actions_value_2[state][action]
+            )
 
     def update_for_terminal_state(self, state: str, action: int, reward: float
                                   ) -> None:
@@ -86,14 +87,20 @@ class Agent:
                 valid_action]
             if state_actions_value[i] > max_:
                 max_ = state_actions_value[i]
+        best_actions = []
+        for valid_action in valid_actions:
+            if self.state_actions_value_1[state][valid_action] + \
+                    self.state_actions_value_2[state][valid_action] == max_:
+                best_actions.append(valid_action)
         mean = 0.
-        other_action_weight = self.epsilon / len(valid_actions)
-        best_action_weight = 1. - self.epsilon + other_action_weight
-        for valid_action, state_action_value in zip(valid_actions, state_actions_value):
-            if state_action_value == max_:
-                mean += state_action_value * best_action_weight
-            else:
-                mean += state_action_value * other_action_weight
+        for valid_action in valid_actions:
+            weight = 0.
+            if valid_action in best_actions:
+                weight += (1 - self.epsilon) / len(best_actions)
+            weight += self.epsilon / len(valid_actions)
+            mean += weight * \
+                (self.state_actions_value_1[state][valid_action] +
+                 self.state_actions_value_2[state][valid_action])
         return mean * 0.5
 
     def save(self, path: str) -> None:
