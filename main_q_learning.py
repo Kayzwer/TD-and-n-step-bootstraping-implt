@@ -21,6 +21,6 @@ if __name__ == "__main__":
                 state = next_state
             else:
                 agent.update_for_terminal_state(state, action, reward)
-            if (i + 1) % 50000:
-                agent.save("./ttt.pkl")
+        if (i + 1) % 50000 == 0:
+            agent.save("./ttt.pkl")
         print(f"Episode: {i + 1}, Score: {score}")

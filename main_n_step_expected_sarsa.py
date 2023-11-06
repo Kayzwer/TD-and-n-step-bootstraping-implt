@@ -18,6 +18,6 @@ if __name__ == "__main__":
             agent.store_info(state=next_state, action=action, reward=reward)
             agent.update(env.get_valid_actions())
         agent.update_remaining_info()
-        if (i + 1) % 50000:
+        if (i + 1) % 50000 == 0:
             agent.save("./ttt.pkl")
         print(f"Episode: {i + 1}, Score: {score}")

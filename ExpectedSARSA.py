@@ -50,15 +50,17 @@ class Agent:
         for valid_action in valid_actions:
             if self.state_actions_value[state][valid_action] > max_:
                 max_ = self.state_actions_value[state][valid_action]
-        mean = 0.
-        other_action_weight = self.epsilon / len(valid_actions)
-        best_action_weight = 1. - self.epsilon + other_action_weight
+        best_actions = []
         for valid_action in valid_actions:
-            state_action_value = self.state_actions_value[state][valid_action]
-            if state_action_value == max_:
-                mean += state_action_value * best_action_weight
-            else:
-                mean += state_action_value * other_action_weight
+            if self.state_actions_value[state][valid_action] == max_:
+                best_actions.append(valid_action)
+        mean = 0.
+        for valid_action in valid_actions:
+            weight = 0.
+            if valid_action in best_actions:
+                weight += (1 - self.epsilon) / len(best_actions)
+            weight += self.epsilon / len(valid_actions)
+            mean += weight * self.state_actions_value[state][valid_action]
         return mean
 
     def save(self, path: str) -> None:
