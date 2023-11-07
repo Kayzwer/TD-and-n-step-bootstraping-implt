@@ -20,17 +20,17 @@ class Agent:
             self.state_actions_value[state] = np.zeros(
                 self.n_actions, dtype=np.float32)
         if np.random.uniform(0., 1.) <= self.epsilon:
-            return np.random.choice(valid_actions)
+            return np.random.choice(np.array(valid_actions, dtype=np.int8))
         else:
             max_ = float('-inf')
             for valid_action in valid_actions:
                 if self.state_actions_value[state][valid_action] > max_:
                     max_ = self.state_actions_value[state][valid_action]
-            actions = []
+            best_actions = []
             for valid_action in valid_actions:
                 if self.state_actions_value[state][valid_action] == max_:
-                    actions.append(valid_action)
-            return np.random.choice(actions)
+                    best_actions.append(valid_action)
+            return np.random.choice(np.array(best_actions, dtype=np.int8))
 
     def update(self, state: str, action: int, reward: float, next_state: str,
                valid_actions: List[int]) -> None:
@@ -58,7 +58,7 @@ class Agent:
         for valid_action in valid_actions:
             weight = 0.
             if valid_action in best_actions:
-                weight += (1 - self.epsilon) / len(best_actions)
+                weight += (1. - self.epsilon) / len(best_actions)
             weight += self.epsilon / len(valid_actions)
             mean += weight * self.state_actions_value[state][valid_action]
         return mean

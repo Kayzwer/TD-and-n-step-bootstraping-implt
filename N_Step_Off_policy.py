@@ -33,10 +33,9 @@ class Agent:
         for valid_action in valid_actions:
             if self.state_actions_value[state][valid_action] == max_:
                 best_actions.append(valid_action)
-        if np.random.uniform(0., 1.) <= self.epsilon:
-            action = np.random.choice(valid_actions)
-        else:
-            action = np.random.choice(best_actions)
+        action = np.random.choice(np.array(valid_actions, dtype=np.int8) if
+                                  np.random.uniform(0., 1.) <= self.epsilon
+                                  else np.array(best_actions, dtype=np.int8))
         behaviour_action_prob = self.epsilon / len(valid_actions)
         target_action_prob = 0.
         best_actions_len_inv = 1. / len(best_actions)
@@ -46,8 +45,7 @@ class Agent:
         return action, target_action_prob, behaviour_action_prob
 
     def store_info(self, state: Optional[str] = None,
-                   action: Optional[int] = None,
-                   reward: Optional[float] = None,
+                   action: Optional[int] = None, reward: Optional[float] = None,
                    target_action_prob: Optional[float] = None,
                    behaviour_action_prob: Optional[float] = None) -> None:
         if state != None:

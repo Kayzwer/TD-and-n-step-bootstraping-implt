@@ -24,17 +24,17 @@ class Agent:
             self.state_actions_value[state] = np.zeros(
                 self.n_actions, dtype=np.float32)
         if np.random.uniform(0., 1.) <= self.epsilon:
-            return np.random.choice(valid_actions)
+            return np.random.choice(np.array(valid_actions, dtype=np.int8))
         else:
             max_ = float('-inf')
             for valid_action in valid_actions:
                 if self.state_actions_value[state][valid_action] > max_:
                     max_ = self.state_actions_value[state][valid_action]
-            actions = []
+            best_actions = []
             for valid_action in valid_actions:
                 if self.state_actions_value[state][valid_action] == max_:
-                    actions.append(valid_action)
-            return np.random.choice(actions)
+                    best_actions.append(valid_action)
+            return np.random.choice(np.array(best_actions, dtype=np.int8))
 
     def store_info(self, state: Optional[str] = None,
                    action: Optional[int] = None,
