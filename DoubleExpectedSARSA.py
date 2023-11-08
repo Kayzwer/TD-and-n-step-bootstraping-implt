@@ -54,7 +54,8 @@ class Agent:
             selected_action = np.random.choice(actions)
             self.state_actions_value_1[state][action] += self.alpha * (
                 reward + self.gamma * self.state_actions_value_2[next_state][
-                    selected_action] - self.state_actions_value_1[state][action])
+                    selected_action] - self.state_actions_value_1[state][action]
+            )
         else:
             max_ = float('-inf')
             for valid_action in next_state_valid_actions:

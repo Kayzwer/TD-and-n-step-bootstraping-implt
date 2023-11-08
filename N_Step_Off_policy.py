@@ -21,7 +21,8 @@ class Agent:
         self.target_action_prob_memory = []
         self.behaviour_action_prob_memory = []
 
-    def choose_action(self, state: str, valid_actions: List[int]) -> Tuple[int, float, float]:
+    def choose_action(self, state: str, valid_actions: List[int]
+                      ) -> Tuple[int, float, float]:
         if not state in self.state_actions_value:
             self.state_actions_value[state] = np.zeros(
                 self.n_actions, dtype=np.float32)
